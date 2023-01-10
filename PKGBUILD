@@ -16,7 +16,7 @@ _github="https://github.com/ps2dev"
 _local="ssh://git@127.0.0.1:/home/git"
 url="${_github}/${_platform}${_base}-${_module}"
 makedepends=("${target}-binutils"
-             "${target}-gcc-stage1"
+             "${target}-gcc"
              "libgmp-static"
              "mpfr-static"
              "libmpc-static"
@@ -51,11 +51,8 @@ build() {
   export LDFLAGS
 
   local _cflags=(${cflags[@]})
-                 # -O2
-                 # -D_FORTIFY_SOURCE=0)
 
   local _ldflags=(${ldflags[@]})
-                  # -ldl)
 
   local _build_opts=(${_make_opts[@]}
                      CFLAGS="${_cflags[*]}"
@@ -71,7 +68,6 @@ build() {
     local _configure_opts=(--prefix="/usr"
                            --target="${_target}")
 
-    # CFLAGS_FOR_TARGET="-02" \
     CFLAGS="${_cflags[*]}" \
     "../configure" "${_configure_opts[@]}"
 
@@ -88,7 +84,5 @@ package() {
   for _target in "mips64r5900el-ps2-elf"; do
     cd "build-${_target}"
     make DESTDIR="${pkgdir}" ${_make_opts[@]} install-strip
-    # make ${_make_opts[@]} clean
-    cd ..
   done
 }
